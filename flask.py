@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 
 def get_top_output():
-    
     process = subprocess.Popen(['top', '-b', '-n', '1'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
     if stderr:
@@ -20,11 +19,17 @@ def get_ist_time():
     ist = pytz.timezone('Asia/Kolkata')
     return datetime.now(ist).strftime('%Y-%m-%d %H:%M:%S')
 
+
+def get_system_username():
+    try:
+        return os.getlogin()
+    except OSError:
+        return os.getenv('USER', 'unknown')
+
 @app.route('/htop')
 def htop():
-    
     full_name = "Davis Joseph"  
-    system_username = os.getlogin()
+    system_username = get_system_username()
     ist_time = get_ist_time()
     top_output = get_top_output()
 
